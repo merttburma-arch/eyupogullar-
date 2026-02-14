@@ -734,20 +734,24 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/admin" element={<AdminPanel />} />
-                <Route path="/*" element={
-                    <div className="font-sans antialiased text-gray-900 bg-white">
-                        <Navbar/>
-                        <Hero/>
-                        <PriceList />
-                        <Stats/>
-                        <Partners/>
-                        <About/>
-                        <Services/>
-                        <Projects/>
-                        <Contact/>
-                        <Footer/>
-                    </div>
-                } />
+
+                <Route
+                    path="/*"
+                    element={
+                        <div className="font-sans antialiased text-gray-900 bg-white">
+                            <Navbar />
+                            <Hero />
+                            <PriceList />
+                            <Stats />
+                            <Partners />
+                            <About />
+                            <Services />
+                            <Projects />
+                            <Contact />
+                            <Footer />
+                        </div>
+                    }
+                />
             </Routes>
         </Router>
     );

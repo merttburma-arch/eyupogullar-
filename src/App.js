@@ -37,7 +37,7 @@ const Navbar = () => {
 
     const menuItems = [
         {name: 'Ana Sayfa', href: '#home'},
-        {name: 'Fiyat Listesi', href: '#prices'}, // Fiyat listesi menüye eklendi
+        {name: 'Fiyat Listesi', href: '#prices'},
         {name: 'Hakkımızda', href: '#about'},
         {name: 'Hizmetler', href: '#services'},
         {name: 'Projeler', href: '#projects'},

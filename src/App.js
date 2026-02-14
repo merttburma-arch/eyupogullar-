@@ -35,7 +35,7 @@ import kentselDönüşüm from "./img/kentselDönüşüm.jpg";
 import AdminPanel from "./components/AdminPanel";
 
 // API base (Localde localhost, prod’da env ile değiştir)
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000/api";
+const API_BASE = "https://backend-production-a12c.up.railway.app";
 
 /* =========================
    NAVBAR (HASH ROUTER UYUMLU)

@@ -145,7 +145,7 @@ const PriceList = () => {
     useEffect(() => {
         const fetchPrices = async () => {
             try {
-                const response = await fetch(`${API_BASE}/prices`);
+                const response = await fetch(`${API_BASE}/api/prices`);
                 const data = await response.json();
                 setPrices(data);
             } catch (error) {
@@ -658,7 +658,7 @@ const Contact = () => {
         setAlert({ show: false, message: "", type: "" });
 
         try {
-            const response = await fetch(`${API_BASE}/contact`, {
+            const response = await fetch(`${API_BASE}/api/contact`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

@@ -33,7 +33,7 @@ const AdminPanel = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE}/login`, {
+            const response = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const AdminPanel = () => {
 
     const fetchPrices = async () => {
         try {
-            const response = await fetch(`${API_BASE}/prices`);
+            const response = await fetch(`${API_BASE}/api/prices`);
             const data = await response.json();
             setPrices(data);
         } catch (error) {
@@ -81,7 +81,7 @@ const AdminPanel = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE}/prices`, {
+            const response = await fetch(`${API_BASE}/api/prices`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

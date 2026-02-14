@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/eyupogullar-/static/css/main.d8f29b2a.css",
-    "main.js": "/eyupogullar-/static/js/main.ca775217.js",
+    "main.js": "/eyupogullar-/static/js/main.0eaea034.js",
     "static/js/453.c8d6b6f8.chunk.js": "/eyupogullar-/static/js/453.c8d6b6f8.chunk.js",
     "static/media/demirrr.png": "/eyupogullar-/static/media/demirrr.d8fe7ef0a1b42c0acb1e.png",
     "static/media/kentselDönüşüm.jpg": "/eyupogullar-/static/media/kentselDönüşüm.5f046f58cc3e1d993877.jpg",
@@ -15,11 +15,11 @@
     "static/media/colakıglu.png": "/eyupogullar-/static/media/colakıglu.8d9a05e781ff4501d195.png",
     "index.html": "/eyupogullar-/index.html",
     "main.d8f29b2a.css.map": "/eyupogullar-/static/css/main.d8f29b2a.css.map",
-    "main.ca775217.js.map": "/eyupogullar-/static/js/main.ca775217.js.map",
+    "main.0eaea034.js.map": "/eyupogullar-/static/js/main.0eaea034.js.map",
     "453.c8d6b6f8.chunk.js.map": "/eyupogullar-/static/js/453.c8d6b6f8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d8f29b2a.css",
-    "static/js/main.ca775217.js"
+    "static/js/main.0eaea034.js"
   ]
 }

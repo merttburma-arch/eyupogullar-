@@ -11,7 +11,7 @@ const AdminPanel = () => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
 
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = "https://backend-production-a12c.up.railway.app";
 
     useEffect(() => {
         if (isLoggedIn) {

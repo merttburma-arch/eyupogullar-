@@ -328,7 +328,7 @@ const PriceList = () => {
                         <div className="text-sm text-gray-500 flex items-center gap-2">
                             <AlertCircle className="h-4 w-4 text-orange-500" />
                             <span>
-                Fiyatlara <strong>KDV Dahil Değildir.</strong> Nakliye dahildir.
+                Fiyatlara <strong>KDV </strong> Nakliye dahildir.
               </span>
                         </div>
 

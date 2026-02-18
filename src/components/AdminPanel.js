@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Lock, Save, LogOut, AlertCircle, CheckCircle } from 'lucide-react';
 
 const AdminPanel = () => {
@@ -11,22 +11,32 @@ const AdminPanel = () => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
 
-    const API_BASE = "https://backend-production-a12c.up.railway.app";
+    const API_BASE = 'https://backend-production-a12c.up.railway.app';
 
-    useEffect(() => {
-        if (isLoggedIn) {
-            fetchPrices();
-        }
-    }, [isLoggedIn]);
-
-    const showMessage = (msg, type) => {
+    const showMessage = useCallback((msg, type) => {
         setMessage(msg);
         setMessageType(type);
         setTimeout(() => {
             setMessage('');
             setMessageType('');
         }, 3000);
-    };
+    }, []);
+
+    const fetchPrices = useCallback(async () => {
+        try {
+            const response = await fetch(`${API_BASE}/api/prices`);
+            const data = await response.json();
+            setPrices(data);
+        } catch (error) {
+            showMessage('Fiyatlar alınamadı', 'error');
+        }
+    }, [API_BASE, showMessage]);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchPrices();
+        }
+    }, [isLoggedIn, fetchPrices]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -35,9 +45,7 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
 
@@ -66,16 +74,6 @@ const AdminPanel = () => {
         showMessage('Çıkış yapıldı', 'info');
     };
 
-    const fetchPrices = async () => {
-        try {
-            const response = await fetch(`${API_BASE}/api/prices`);
-            const data = await response.json();
-            setPrices(data);
-        } catch (error) {
-            showMessage('Fiyatlar alınamadı', 'error');
-        }
-    };
-
     const handlePriceUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -85,7 +83,7 @@ const AdminPanel = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(prices),
             });
@@ -106,37 +104,37 @@ const AdminPanel = () => {
     };
 
     const handleBasePriceChange = (key, value) => {
-        setPrices(prev => ({
+        setPrices((prev) => ({
             ...prev,
             basePrices: {
                 ...prev.basePrices,
-                [key]: parseInt(value) || 0
-            }
+                [key]: parseInt(value, 10) || 0,
+            },
         }));
     };
 
     const handleDistrictChange = (index, field, value) => {
-        setPrices(prev => ({
+        setPrices((prev) => ({
             ...prev,
-            districts: prev.districts.map((district, i) => 
-                i === index 
-                    ? { ...district, [field]: field === 'cost' ? parseInt(value) || 0 : value }
+            districts: prev.districts.map((district, i) =>
+                i === index
+                    ? { ...district, [field]: field === 'cost' ? parseInt(value, 10) || 0 : value }
                     : district
-            )
+            ),
         }));
     };
 
     const addDistrict = () => {
-        setPrices(prev => ({
+        setPrices((prev) => ({
             ...prev,
-            districts: [...prev.districts, { name: 'Yeni İlçe', cost: 0 }]
+            districts: [...prev.districts, { name: 'Yeni İlçe', cost: 0 }],
         }));
     };
 
     const removeDistrict = (index) => {
-        setPrices(prev => ({
+        setPrices((prev) => ({
             ...prev,
-            districts: prev.districts.filter((_, i) => i !== index)
+            districts: prev.districts.filter((_, i) => i !== index),
         }));
     };
 
@@ -155,6 +153,7 @@ const AdminPanel = () => {
                             Fiyat listesini yönetmek için giriş yapın
                         </p>
                     </div>
+
                     <form className="mt-8 space-y-6" onSubmit={handleLogin}>
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
@@ -191,14 +190,22 @@ const AdminPanel = () => {
                     </form>
 
                     {message && (
-                        <div className={`mt-4 p-3 rounded-md flex items-center gap-2 ${
-                            messageType === 'success' ? 'bg-green-50 text-green-800' :
-                            messageType === 'error' ? 'bg-red-50 text-red-800' :
-                            'bg-blue-50 text-blue-800'
-                        }`}>
-                            {messageType === 'success' ? <CheckCircle className="h-4 w-4" /> :
-                             messageType === 'error' ? <AlertCircle className="h-4 w-4" /> :
-                             <AlertCircle className="h-4 w-4" />}
+                        <div
+                            className={`mt-4 p-3 rounded-md flex items-center gap-2 ${
+                                messageType === 'success'
+                                    ? 'bg-green-50 text-green-800'
+                                    : messageType === 'error'
+                                        ? 'bg-red-50 text-red-800'
+                                        : 'bg-blue-50 text-blue-800'
+                            }`}
+                        >
+                            {messageType === 'success' ? (
+                                <CheckCircle className="h-4 w-4" />
+                            ) : messageType === 'error' ? (
+                                <AlertCircle className="h-4 w-4" />
+                            ) : (
+                                <AlertCircle className="h-4 w-4" />
+                            )}
                             {message}
                         </div>
                     )}
@@ -215,7 +222,10 @@ const AdminPanel = () => {
                     <div className="flex justify-between items-center">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900">Fiyat Listesi Yönetimi</h1>
-                            <p className="text-gray-600 mt-1">Son güncelleme: {prices?.lastUpdated ? new Date(prices.lastUpdated).toLocaleString('tr-TR') : 'Bilinmiyor'}</p>
+                            <p className="text-gray-600 mt-1">
+                                Son güncelleme:{' '}
+                                {prices?.lastUpdated ? new Date(prices.lastUpdated).toLocaleString('tr-TR') : 'Bilinmiyor'}
+                            </p>
                         </div>
                         <button
                             onClick={handleLogout}
@@ -228,14 +238,22 @@ const AdminPanel = () => {
                 </div>
 
                 {message && (
-                    <div className={`mb-6 p-4 rounded-md flex items-center gap-2 ${
-                        messageType === 'success' ? 'bg-green-50 text-green-800 border border-green-200' :
-                        messageType === 'error' ? 'bg-red-50 text-red-800 border border-red-200' :
-                        'bg-blue-50 text-blue-800 border border-blue-200'
-                    }`}>
-                        {messageType === 'success' ? <CheckCircle className="h-5 w-5" /> :
-                         messageType === 'error' ? <AlertCircle className="h-5 w-5" /> :
-                         <AlertCircle className="h-5 w-5" />}
+                    <div
+                        className={`mb-6 p-4 rounded-md flex items-center gap-2 ${
+                            messageType === 'success'
+                                ? 'bg-green-50 text-green-800 border border-green-200'
+                                : messageType === 'error'
+                                    ? 'bg-red-50 text-red-800 border border-red-200'
+                                    : 'bg-blue-50 text-blue-800 border border-blue-200'
+                        }`}
+                    >
+                        {messageType === 'success' ? (
+                            <CheckCircle className="h-5 w-5" />
+                        ) : messageType === 'error' ? (
+                            <AlertCircle className="h-5 w-5" />
+                        ) : (
+                            <AlertCircle className="h-5 w-5" />
+                        )}
                         {message}
                     </div>
                 )}
@@ -244,10 +262,15 @@ const AdminPanel = () => {
                     <form onSubmit={handlePriceUpdate} className="space-y-8">
                         {/* Base Fiyatlar */}
                         <div className="bg-white shadow rounded-lg p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">Temel Fiyatlar (Fabrika Çıkış)</h2>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                                Temel Fiyatlar (Fabrika Çıkış)
+                            </h2>
+
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Ø 8 mm (₺/ton)</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Ø 8 mm (₺/ton)
+                                    </label>
                                     <input
                                         type="number"
                                         value={prices.basePrices.p8}
@@ -255,8 +278,11 @@ const AdminPanel = () => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
+
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Ø 10 mm (₺/ton)</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Ø 10 mm (₺/ton)
+                                    </label>
                                     <input
                                         type="number"
                                         value={prices.basePrices.p10}
@@ -264,8 +290,11 @@ const AdminPanel = () => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
+
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Ø 12-32 mm (₺/ton)</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Ø 12-32 mm (₺/ton)
+                                    </label>
                                     <input
                                         type="number"
                                         value={prices.basePrices.p12}
@@ -288,45 +317,55 @@ const AdminPanel = () => {
                                     Yeni İlçe Ekle
                                 </button>
                             </div>
+
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İlçe Adı</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nakliye Ücreti (₺)</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlem</th>
-                                        </tr>
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            İlçe Adı
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Nakliye Ücreti (₺)
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            İşlem
+                                        </th>
+                                    </tr>
                                     </thead>
+
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {prices.districts.map((district, index) => (
-                                            <tr key={index}>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <input
-                                                        type="text"
-                                                        value={district.name}
-                                                        onChange={(e) => handleDistrictChange(index, 'name', e.target.value)}
-                                                        className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                    />
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <input
-                                                        type="number"
-                                                        value={district.cost}
-                                                        onChange={(e) => handleDistrictChange(index, 'cost', e.target.value)}
-                                                        className="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                    />
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeDistrict(index)}
-                                                        className="text-red-600 hover:text-red-900 text-sm"
-                                                    >
-                                                        Sil
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                    {prices.districts.map((district, index) => (
+                                        <tr key={index}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="text"
+                                                    value={district.name}
+                                                    onChange={(e) => handleDistrictChange(index, 'name', e.target.value)}
+                                                    className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                />
+                                            </td>
+
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="number"
+                                                    value={district.cost}
+                                                    onChange={(e) => handleDistrictChange(index, 'cost', e.target.value)}
+                                                    className="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                />
+                                            </td>
+
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeDistrict(index)}
+                                                    className="text-red-600 hover:text-red-900 text-sm"
+                                                >
+                                                    Sil
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </table>
                             </div>

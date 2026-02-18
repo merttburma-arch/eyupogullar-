@@ -714,15 +714,32 @@ const Contact = () => {
                         </div>
 
                         <div className="flex gap-4 mt-8">
-                            <a href="#" className="p-3 bg-slate-800 rounded-full hover:bg-blue-700 transition duration-300">
+                            <button
+                                type="button"
+                                aria-label="Facebook"
+                                onClick={() => {}}
+                                className="p-3 bg-slate-800 rounded-full hover:bg-blue-700 transition duration-300"
+                            >
                                 <Facebook className="h-5 w-5" />
-                            </a>
-                            <a href="#" className="p-3 bg-slate-800 rounded-full hover:bg-blue-700 transition duration-300">
+                            </button>
+
+                            <button
+                                type="button"
+                                aria-label="Instagram"
+                                onClick={() => {}}
+                                className="p-3 bg-slate-800 rounded-full hover:bg-blue-700 transition duration-300"
+                            >
                                 <Instagram className="h-5 w-5" />
-                            </a>
-                            <a href="#" className="p-3 bg-slate-800 rounded-full hover:bg-blue-700 transition duration-300">
+                            </button>
+
+                            <button
+                                type="button"
+                                aria-label="LinkedIn"
+                                onClick={() => {}}
+                                className="p-3 bg-slate-800 rounded-full hover:bg-blue-700 transition duration-300"
+                            >
                                 <Linkedin className="h-5 w-5" />
-                            </a>
+                            </button>
                         </div>
                     </div>
 
